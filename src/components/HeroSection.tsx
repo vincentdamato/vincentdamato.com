@@ -20,7 +20,7 @@ const HeroSection = () => {
 
   const roles = [
     { label: 'Derivatives Accountant', color: 'emerald' },
-    { label: 'Startup Founder', color: 'amber' },
+    { label: '', color: 'amber' },
     { label: 'Options Trader', color: 'sky' },
   ];
 
@@ -178,24 +178,6 @@ const HeroSection = () => {
               ↓
             </span>
           </a>
-        </div>
-      </div>
-
-      {/* Bottom scroll indicator */}
-      <div 
-        className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-700 delay-[1100ms] ${
-          isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-        }`}
-      >
-        <div className="flex flex-col items-center gap-2">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-stone-400">
-            Scroll
-          </span>
-          <div className="relative h-12 w-px overflow-hidden bg-stone-200">
-            <div 
-              className="absolute inset-x-0 h-4 animate-scroll-line bg-gradient-to-b from-stone-500 to-transparent"
-            />
-          </div>
         </div>
       </div>
 
