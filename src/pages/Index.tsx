@@ -1,27 +1,21 @@
-import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
+  useEffect(() => {
+    document.title = "Your Name | Designer & Developer";
+  }, []);
+
   return (
-    <>
-      <Helmet>
-        <title>Your Name | Designer & Developer</title>
-        <meta
-          name="description"
-          content="Personal website of Your Name - Designer, developer, and creative thinker crafting meaningful digital experiences."
-        />
-      </Helmet>
-      
-      <main className="min-h-screen bg-background">
-        <HeroSection />
-        <AboutSection />
-        <ContactSection />
-        <Footer />
-      </main>
-    </>
+    <main className="min-h-screen bg-background">
+      <HeroSection />
+      <AboutSection />
+      <ContactSection />
+      <Footer />
+    </main>
   );
 };
 
