@@ -2,4 +2,4 @@
 
 Personal website.
 
-**Live site:** [vincentdamato.com](https://vincentdamato.com
+**Live site:** [vincentdamato.com]  https://vincentdamato.com
