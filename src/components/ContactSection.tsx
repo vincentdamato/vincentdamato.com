@@ -3,10 +3,10 @@ import SocialLink from "./SocialLink";
 
 const ContactSection = () => {
   const socialLinks = [
-    { href: "mailto:hello@example.com", icon: Mail, label: "Email" },
-    { href: "https://github.com", icon: Github, label: "GitHub" },
-    { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
-    { href: "https://twitter.com", icon: Twitter, label: "Twitter" },
+    { href: "mailto:hello@vincentdamaot.com", icon: Mail, label: "Email" },
+    { href: "https://github.com/vincentdamato", icon: Github, label: "GitHub" },
+    { href: "https://linkedin.com/in/vincentdamato", icon: Linkedin, label: "LinkedIn" },
+    { href: "https://twitter.com/vincentdamato", icon: Twitter, label: "Twitter" },
   ];
 
   return (
