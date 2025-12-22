@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   useEffect(() => {
-    document.title = "Vincent Damato | Designer & Developer";
+    document.title = "Vincent Damato";
   }, []);
 
   return (
