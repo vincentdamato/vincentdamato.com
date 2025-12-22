@@ -19,43 +19,40 @@ const HeroSection = () => {
   }, []);
 
   const roles = [
-    { label: 'Derivatives Accountant', accent: 'text-emerald-400' },
-    { label: 'Startup Founder', accent: 'text-amber-400' },
-    { label: 'Options Trader', accent: 'text-sky-400' },
+    { label: 'Derivatives Accountant', color: 'emerald' },
+    { label: 'Startup Founder', color: 'amber' },
+    { label: 'Options Trader', color: 'sky' },
   ];
 
   return (
-    <section className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-zinc-950 px-6 md:px-12 lg:px-24">
-      {/* Ambient gradient background */}
+    <section className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-stone-50 px-6 md:px-12 lg:px-24">
+      {/* Soft ambient gradient background */}
       <div 
-        className="pointer-events-none absolute inset-0 opacity-40"
+        className="pointer-events-none absolute inset-0 opacity-60"
         style={{
           background: `
             radial-gradient(ellipse 80% 50% at ${50 + mousePosition.x * 0.5}% ${40 + mousePosition.y * 0.5}%, 
-              rgba(16, 185, 129, 0.15) 0%, 
+              rgba(16, 185, 129, 0.08) 0%, 
               transparent 50%),
             radial-gradient(ellipse 60% 40% at ${30 - mousePosition.x * 0.3}% ${60 - mousePosition.y * 0.3}%, 
-              rgba(245, 158, 11, 0.1) 0%, 
+              rgba(245, 158, 11, 0.06) 0%, 
               transparent 50%)
           `,
         }}
       />
 
-      {/* Subtle grid overlay */}
+      {/* Elegant dot grid overlay */}
       <div 
-        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        className="pointer-events-none absolute inset-0 opacity-[0.4]"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
+          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px)`,
+          backgroundSize: '24px 24px',
         }}
       />
 
       {/* Floating accent elements */}
       <div 
-        className="pointer-events-none absolute right-[15%] top-[20%] h-px w-32 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"
+        className="pointer-events-none absolute right-[15%] top-[20%] h-px w-32 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent"
         style={{
           transform: `translate(${mousePosition.x * -0.5}px, ${mousePosition.y * -0.5}px)`,
           transition: 'transform 0.3s ease-out',
@@ -68,6 +65,13 @@ const HeroSection = () => {
           transition: 'transform 0.3s ease-out',
         }}
       />
+      <div 
+        className="pointer-events-none absolute right-[25%] bottom-[25%] h-24 w-24 rounded-full border border-stone-200/60"
+        style={{
+          transform: `translate(${mousePosition.x * 0.4}px, ${mousePosition.y * 0.4}px)`,
+          transition: 'transform 0.4s ease-out',
+        }}
+      />
 
       <div className="relative z-10 max-w-5xl">
         {/* Overline with location */}
@@ -76,8 +80,8 @@ const HeroSection = () => {
             isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}
         >
-          <div className="h-px w-8 bg-zinc-600" />
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-zinc-500">
+          <div className="h-px w-8 bg-stone-300" />
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-stone-400">
             West Bend, Wisconsin
           </p>
         </div>
@@ -85,7 +89,7 @@ const HeroSection = () => {
         {/* Main name with staggered reveal */}
         <h1 className="mt-8 overflow-hidden">
           <span 
-            className={`block font-light tracking-tight text-zinc-100 transition-all duration-700 delay-100 ${
+            className={`block font-light tracking-tight text-stone-900 transition-all duration-700 delay-100 ${
               isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
             }`}
             style={{ 
@@ -97,7 +101,7 @@ const HeroSection = () => {
             Vincent
           </span>
           <span 
-            className={`block font-light tracking-tight text-zinc-100 transition-all duration-700 delay-200 ${
+            className={`block font-light tracking-tight text-stone-900 transition-all duration-700 delay-200 ${
               isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
             }`}
             style={{ 
@@ -119,17 +123,19 @@ const HeroSection = () => {
           {roles.map((role, i) => (
             <span
               key={role.label}
-              className={`group relative cursor-default overflow-hidden rounded-full border border-zinc-800 bg-zinc-900/50 px-4 py-2 font-mono text-xs uppercase tracking-wider text-zinc-400 backdrop-blur-sm transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-800/50`}
+              className={`group relative cursor-default overflow-hidden rounded-full border border-stone-200 bg-white/70 px-4 py-2 font-mono text-xs uppercase tracking-wider text-stone-500 backdrop-blur-sm transition-all duration-300 hover:border-stone-300 hover:bg-white hover:shadow-sm`}
               style={{ 
-                transitionDelay: `${600 + i * 100}ms`,
                 animation: isLoaded ? `fadeSlideIn 0.5s ease-out ${0.6 + i * 0.1}s both` : 'none',
               }}
             >
-              <span className={`transition-colors duration-300 group-hover:${role.accent}`}>
+              <span className="transition-colors duration-300 group-hover:text-stone-800">
                 {role.label}
               </span>
               <span 
-                className={`absolute inset-x-0 bottom-0 h-px ${role.accent.replace('text-', 'bg-')} scale-x-0 transition-transform duration-300 group-hover:scale-x-100`} 
+                className={`absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${
+                  role.color === 'emerald' ? 'bg-emerald-500' :
+                  role.color === 'amber' ? 'bg-amber-500' : 'bg-sky-500'
+                }`} 
               />
             </span>
           ))}
@@ -137,13 +143,13 @@ const HeroSection = () => {
 
         {/* Description */}
         <p 
-          className={`mt-10 max-w-lg font-sans text-lg leading-relaxed text-zinc-400 transition-all duration-700 delay-700 ${
+          className={`mt-10 max-w-lg font-sans text-lg leading-relaxed text-stone-500 transition-all duration-700 delay-700 ${
             isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}
         >
           Building at the intersection of{' '}
-          <span className="text-zinc-200">complex financial instruments</span> and{' '}
-          <span className="text-zinc-200">emerging technology</span>. 
+          <span className="text-stone-800">complex financial instruments</span> and{' '}
+          <span className="text-stone-800">emerging technology</span>. 
           Currently developing golf's next-gen course management platform.
         </p>
 
@@ -155,7 +161,7 @@ const HeroSection = () => {
         >
           <a
             href="#projects"
-            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-zinc-100 px-6 py-3 font-mono text-sm uppercase tracking-wider text-zinc-900 transition-all duration-300 hover:bg-zinc-200"
+            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-stone-900 px-6 py-3 font-mono text-sm uppercase tracking-wider text-stone-50 transition-all duration-300 hover:bg-stone-800 hover:shadow-lg hover:shadow-stone-900/20"
           >
             <span className="relative z-10">View Projects</span>
             <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
@@ -165,7 +171,7 @@ const HeroSection = () => {
           
           <a
             href="#about"
-            className="group inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-500 transition-colors duration-300 hover:text-zinc-300"
+            className="group inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-stone-400 transition-colors duration-300 hover:text-stone-700"
           >
             <span>About Me</span>
             <span className="inline-block transition-transform duration-300 group-hover:translate-y-1">
@@ -182,12 +188,12 @@ const HeroSection = () => {
         }`}
       >
         <div className="flex flex-col items-center gap-2">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-600">
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-stone-400">
             Scroll
           </span>
-          <div className="relative h-12 w-px overflow-hidden bg-zinc-800">
+          <div className="relative h-12 w-px overflow-hidden bg-stone-200">
             <div 
-              className="absolute inset-x-0 h-4 animate-scroll-line bg-gradient-to-b from-emerald-500/80 to-transparent"
+              className="absolute inset-x-0 h-4 animate-scroll-line bg-gradient-to-b from-stone-500 to-transparent"
             />
           </div>
         </div>
