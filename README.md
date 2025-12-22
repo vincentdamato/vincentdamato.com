@@ -1,9 +1,5 @@
 # vincentdamato.com
 
- 
+Personal website.
 
-Personal website for Vincent Damato.
-
- 
-
-**Live site:** [vincentdamato.com](https://vincentdamato.com)
+**Live site:** [vincentdamato.com](https://vincentdamato.com
