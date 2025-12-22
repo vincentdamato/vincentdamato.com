@@ -7,7 +7,7 @@ const HeroSection = () => {
         </p>
         
         <h1 className="mt-6 animate-fade-in-up font-serif text-5xl font-medium leading-tight tracking-tight text-foreground md:text-7xl lg:text-8xl">
-          Your Name
+          Vincent Damato
         </h1>
         
         <p className="mt-8 max-w-xl animate-fade-in-delay-1 font-sans text-lg leading-relaxed text-muted-foreground md:text-xl">
