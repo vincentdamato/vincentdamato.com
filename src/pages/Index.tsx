@@ -1,22 +1,12 @@
 import { useEffect } from "react";
-import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
-import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
+import Site from "@/site/Site";
 
 const Index = () => {
   useEffect(() => {
-    document.title = "Vincent Damato";
+    document.title = "Vincent D'Amato | Finance Automation";
   }, []);
 
-  return (
-    <main className="min-h-screen bg-background">
-      <HeroSection />
-      <AboutSection />
-      <ContactSection />
-      <Footer />
-    </main>
-  );
+  return <Site />;
 };
 
 export default Index;
