@@ -589,12 +589,17 @@ body {
   .board-row {
     --cell: calc((100vw - 48px - 32px) / 18);
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     padding-bottom: 6px;
   }
 
-  .board-row .flaps:last-child {
-    --cell: calc((100vw - 48px - 32px) / 18 * 0.72);
+  .board-row + .board-row {
+    border-top: 1px solid #1c4a3b;
+    padding-top: 6px;
+  }
+
+  .vd .board-tab {
+    padding-inline: 10px;
   }
 }
 
