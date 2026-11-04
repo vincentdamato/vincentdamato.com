@@ -106,11 +106,6 @@ body {
   line-height: 1.4;
 }
 
-.vd .intro .tag {
-  margin-top: 2px;
-  font-weight: 600;
-}
-
 .vd .place-group {
   border-top: 1px solid var(--rule);
   margin-top: 12px;

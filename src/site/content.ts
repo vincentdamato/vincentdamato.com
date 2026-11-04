@@ -91,7 +91,7 @@ export const PLACE_GROUPS = [
     ],
   },
   { region: "Caribbean", places: ["Tortola (BVI)", "St. Kitts and Nevis"] },
-  { region: "Europe", places: ["Zurich", "Jungfrau", "Copenhagen", "Munich", "Innsbruck", "Ljubljana", "Piran"] },
+  { region: "Europe", places: ["Zurich", "Jungfrau", "Copenhagen", "Munich", "Innsbruck", "Ljubljana", "Bled", "Piran"] },
 ];
 
 // Vincent's Bond Wizard Ratings Desk format. Edit freely.

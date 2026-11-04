@@ -57,6 +57,7 @@ const EUROPE_PINS: (Pin & { text: string; dx: number; dy: number; align: CanvasT
   { at: [7.96, 46.54], text: "Jungfrau", dx: 2, dy: 32, align: "center" },
   { at: [11.4, 47.27], text: "Innsbruck", dx: 14, dy: 10, align: "left" },
   { at: [14.51, 46.06], text: "Ljubljana", dx: 14, dy: 2, align: "left" },
+  { at: [14.09, 46.37], text: "Bled", dx: -12, dy: 2, align: "right" },
   { at: [13.57, 45.53], text: "Piran", dx: -12, dy: 18, align: "right" },
 ];
 

@@ -320,7 +320,6 @@ export default function Site() {
 
       <header className="intro" hidden={!!open}>
         <h1>Vincent Damato</h1>
-        <p className="tag">Finance automation</p>
         {!noWebgl && (
           <>
             <p className="hint hint-mouse">Click around and explore my office.</p>

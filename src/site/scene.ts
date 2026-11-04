@@ -208,7 +208,7 @@ const FOCUS: Record<Exclude<ItemId, "lamp">, { target: Pos; dist: number; lift?:
   about: { target: [0.95, 0.84, -0.4], dist: 0.95, lift: 0.3 },
   contact: { target: [1.56, 0.86, -0.82], dist: 1.0, lift: 0.3 },
   ratings: { target: [2.53, 1.36, -1.34], dist: 1.3 },
-  golf: { target: [-1.72, 0.74, -1.02], dist: 2.5, lift: 0.3 },
+  golf: { target: [-1.68, 0.92, -1.02], dist: 2.0, lift: 0.25 },
   espresso: { target: [1.6, 0.84, -0.36], dist: 0.8, lift: 0.3 },
   records: { target: [2.95, 0.74, -1.38], dist: 1.25, lift: 0.2 },
   plane: { target: [0.15, 2.16, -1.46], dist: 1.35, lift: -0.25 },
@@ -637,105 +637,158 @@ export function createOffice(canvas: HTMLCanvasElement, cb: OfficeCallbacks): Of
 
   // Irons, stored head-up the way they sit in a bag
   // Chrome reads its own reflections so the set still shines in the night scene.
-  const chrome = mat(0xe4e7ea, 0.2, 1);
-  const shaftSteel = mat(0xd2d5d9, 0.28, 1);
-  for (const m of [chrome, shaftSteel]) {
+  const insertMetal = new THREE.MeshStandardMaterial({ color: 0xa4aab0, roughness: 0.34, metalness: 1, side: THREE.DoubleSide });
+  const chrome = mat(0xeef0f2, 0.13, 1);
+  const satin = mat(0xc9cdd1, 0.36, 1);
+  const shaftSteel = mat(0xb4b9bf, 0.26, 1);
+  for (const m of [chrome, satin, shaftSteel, insertMetal]) {
     m.envMap = scene.environment;
-    m.envMapIntensity = 0.85;
+    m.envMapIntensity = 0.9;
   }
-  const ironShape = new THREE.Shape();
-  ironShape.moveTo(0, 0);
-  ironShape.lineTo(0.074, -0.005);
-  ironShape.quadraticCurveTo(0.092, -0.004, 0.093, 0.016);
-  ironShape.quadraticCurveTo(0.094, 0.05, 0.076, 0.056);
-  ironShape.lineTo(0.008, 0.03);
-  ironShape.quadraticCurveTo(-0.002, 0.022, 0, 0);
-  const ironGeo = new THREE.ExtrudeGeometry(ironShape, {
-    depth: 0.01,
+  const ferrule = mat(0x0c0c0d, 0.3);
+  const ironOutline = () => {
+    const o = new THREE.Shape();
+    o.moveTo(0, 0.002);
+    o.lineTo(0.07, -0.005);
+    o.bezierCurveTo(0.088, -0.006, 0.096, 0.004, 0.096, 0.022);
+    o.bezierCurveTo(0.096, 0.044, 0.09, 0.058, 0.074, 0.058);
+    o.bezierCurveTo(0.05, 0.05, 0.03, 0.042, 0.011, 0.033);
+    o.quadraticCurveTo(0.0, 0.026, 0, 0.002);
+    return o;
+  };
+  const cavityPath = () => {
+    const h = new THREE.Path();
+    h.moveTo(0.015, 0.011);
+    h.lineTo(0.074, 0.005);
+    h.bezierCurveTo(0.084, 0.005, 0.087, 0.012, 0.087, 0.024);
+    h.bezierCurveTo(0.087, 0.04, 0.083, 0.048, 0.073, 0.048);
+    h.bezierCurveTo(0.052, 0.042, 0.033, 0.034, 0.016, 0.026);
+    h.quadraticCurveTo(0.011, 0.02, 0.013, 0.009);
+    return h;
+  };
+  const faceGeo = new THREE.ExtrudeGeometry(ironOutline(), {
+    depth: 0.004,
     bevelEnabled: true,
-    bevelThickness: 0.0025,
-    bevelSize: 0.002,
+    bevelThickness: 0.001,
+    bevelSize: 0.001,
     bevelSegments: 2,
-    curveSegments: 10,
+    curveSegments: 16,
   });
-  const badgeTex = canvasTexture(256, 96, (c) => {
-    const g = c.createLinearGradient(0, 0, 256, 0);
-    g.addColorStop(0, "#3a3f45");
-    g.addColorStop(1, "#6c737b");
-    c.fillStyle = g;
-    c.fillRect(0, 0, 256, 96);
-    c.fillStyle = "#f2f3f4";
-    c.font = '700 62px Barlow, Arial, sans-serif';
-    c.textAlign = "center";
-    c.fillText("T300", 128, 70);
+  const ringShape = ironOutline();
+  ringShape.holes.push(cavityPath());
+  const ringGeo = new THREE.ExtrudeGeometry(ringShape, {
+    depth: 0.013,
+    bevelEnabled: true,
+    bevelThickness: 0.0016,
+    bevelSize: 0.0012,
+    bevelSegments: 3,
+    curveSegments: 16,
   });
-  const badgeMat = new THREE.MeshStandardMaterial({ map: badgeTex, roughness: 0.35, metalness: 0.5 });
-  const iron = (x: number, z: number, top: number, yaw: number) => {
+  const insertShape = new THREE.Shape(cavityPath().getPoints(10));
+  const insertGeo = new THREE.ShapeGeometry(insertShape);
+  const badgeFor = (n: string) => {
+    const tex = canvasTexture(256, 96, (c) => {
+      c.fillStyle = "#4a5057";
+      c.fillRect(0, 0, 256, 96);
+      c.fillStyle = "#f4f5f6";
+      c.font = "700 58px Barlow, Arial, sans-serif";
+      c.fillText("T300", 16, 68);
+      c.fillStyle = "#d8352b";
+      c.textAlign = "right";
+      c.fillText(n, 244, 68);
+    });
+    return new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4, metalness: 0.45 });
+  };
+  const iron = (n: string, x: number, z: number, top: number, yaw: number) => {
     const club = new THREE.Group();
-    club.position.set(x, 0, z);
-    club.rotation.y = yaw;
-    club.add(cyl(0.0048, 0.0048, top - 0.8, shaftSteel, [0, 0.8 + (top - 0.8) / 2, 0], 10));
-    club.add(cyl(0.0078, 0.0068, 0.05, chrome, [0, top + 0.012, 0], 12));
+    club.position.set(x, 0.95, z);
+    club.rotation.set(z * 0.55, yaw, -x * 0.5);
+    const rise = top - 0.95;
+    club.add(cyl(0.0058, 0.0058, rise + 0.15, shaftSteel, [0, (rise - 0.15) / 2, 0], 12));
+    club.add(cyl(0.0074, 0.0074, 0.016, ferrule, [0, rise - 0.008, 0], 12));
+    club.add(cyl(0.0095, 0.0078, 0.05, chrome, [0, rise + 0.02, 0], 14));
     const holder = new THREE.Group();
-    holder.position.set(0.002, top + 0.03, 0);
+    holder.position.set(0.001, rise + 0.04, 0);
     holder.rotation.z = 0.46;
     const head = new THREE.Group();
     head.rotation.x = Math.PI;
-    head.scale.setScalar(1.12);
-    head.add(mesh(ironGeo, chrome));
-    const badge = new THREE.Mesh(new THREE.PlaneGeometry(0.056, 0.021), badgeMat);
-    badge.position.set(0.05, 0.022, -0.0031);
-    badge.rotation.set(0, Math.PI, Math.PI);
+    head.scale.setScalar(1.3);
+    head.add(mesh(faceGeo, satin));
+    const ring = mesh(ringGeo, chrome, [0, 0, -0.013]);
+    head.add(ring);
+    const insert = new THREE.Mesh(insertGeo, insertMetal);
+    insert.position.z = -0.0012;
+    head.add(insert);
+    const badge = new THREE.Mesh(new THREE.PlaneGeometry(0.044, 0.0165), badgeFor(n));
+    badge.position.set(0.05, 0.0255, -0.0022);
+    badge.rotation.set(0, Math.PI, Math.PI + 0.1);
     head.add(badge);
     holder.add(head);
     club.add(holder);
     golfTurn.add(club);
   };
-  [
-    [-0.11, 0.1, 1.09, -0.3],
-    [-0.035, 0.115, 1.1, -0.12],
-    [0.04, 0.115, 1.11, 0.08],
-    [0.11, 0.095, 1.12, 0.26],
-    [-0.1, 0.0, 1.18, -0.24],
-    [-0.015, 0.012, 1.19, -0.04],
-    [0.07, 0.008, 1.2, 0.16],
-    [0.14, -0.015, 1.21, 0.34],
-  ].forEach(([x, z, top, yaw]) => iron(x, z, top, yaw));
+  ([
+    ["P", -0.12, 0.105, 1.1, -0.34],
+    ["9", -0.04, 0.125, 1.12, -0.1],
+    ["8", 0.04, 0.125, 1.135, 0.1],
+    ["7", 0.115, 0.1, 1.15, 0.32],
+    ["6", -0.115, 0.012, 1.2, -0.28],
+    ["5", -0.03, 0.03, 1.225, -0.06],
+    ["4", 0.055, 0.025, 1.24, 0.14],
+  ] as [string, number, number, number, number][]).forEach(([n, x, z, top, yaw]) => iron(n, x, z, top, yaw));
 
-  // Woods in the back row, under black headcovers
-  const coverGeo = new THREE.LatheGeometry(
-    [[0.012, 0], [0.024, 0.08], [0.03, 0.14], [0.058, 0.2], [0.074, 0.25], [0.066, 0.3], [0.04, 0.33], [0, 0.34]].map(
-      ([r, y]) => new THREE.Vector2(r, y),
-    ),
-    28,
+  // Woods in the back row, under black leather headcovers
+  const leather = mat(0x101114, 0.3);
+  const sockGeo = new THREE.LatheGeometry(
+    [[0.017, -0.02], [0.02, 0.05], [0.024, 0.12], [0.03, 0.19], [0.042, 0.235]].map(([r, y]) => new THREE.Vector2(r, y)),
+    24,
   );
-  const coverBlack = mat(0x121316, 0.7);
-  const woods: [number, number, number, number][] = [
-    [-0.11, -0.11, 1.02, -0.1],
-    [0.0, -0.13, 1.06, 0.02],
-    [0.11, -0.11, 1.02, 0.12],
-  ];
-  woods.forEach(([x, z, y, tilt], i) => {
-    const wood = new THREE.Group();
-    wood.position.set(x, y, z);
-    wood.rotation.z = -tilt;
-    const cover = mesh(coverGeo, coverBlack);
-    cover.scale.set(0.95, 0.92, 1.1);
-    wood.add(cover);
-    const band = mesh(new THREE.TorusGeometry(0.0335, 0.0045, 8, 26), bagWhite, [0, 0.135, 0]);
-    band.rotation.x = Math.PI / 2;
-    band.scale.set(0.95, 1.1, 1);
-    band.position.y = 0.124;
-    wood.add(band);
-    if (i === 1) {
-      const stripe = mesh(new THREE.TorusGeometry(0.075, 0.004, 8, 30), mat(0x9c2c24, 0.5), [0, 0.25, 0]);
-      stripe.rotation.x = Math.PI / 2;
-      stripe.scale.set(0.95, 1.1, 1);
-      stripe.position.y = 0.23;
-      wood.add(stripe);
+  const wood = (num: string, size: number, x: number, z: number, y: number, turn: number, stripe: number) => {
+    const w = new THREE.Group();
+    w.position.set(x, y, z);
+    w.rotation.set(z * 0.5, 0, -x * 0.6);
+    const sock = mesh(sockGeo, leather);
+    w.add(sock);
+    for (const ry of [0.03, 0.07, 0.11, 0.15]) {
+      const rib = mesh(new THREE.TorusGeometry(0.0205 + ry * 0.06, 0.0017, 8, 26), leather, [0, ry, 0]);
+      rib.rotation.x = Math.PI / 2;
+      w.add(rib);
     }
-    golfTurn.add(wood);
-  });
+    const headTurn = new THREE.Group();
+    headTurn.position.y = 0.235 + size * 0.5;
+    headTurn.rotation.y = turn;
+    const dome = mesh(new THREE.SphereGeometry(size, 36, 26), leather, [size * 0.32, 0, 0]);
+    dome.scale.set(1.3, 0.84, 1);
+    headTurn.add(dome);
+    const seam = mesh(new THREE.TorusGeometry(size * 0.995, 0.0026, 8, 56), bagWhite, [size * 0.32, 0, 0]);
+    seam.scale.set(1.3, 0.84, 1);
+    headTurn.add(seam);
+    const band = mesh(new THREE.TorusGeometry(size * 0.72, 0.0048, 8, 44), mat(stripe, 0.45), [size * 0.32, size * 0.3, 0]);
+    band.rotation.x = Math.PI / 2;
+    band.scale.set(1.3, 1, 1);
+    headTurn.add(band);
+    const tag = new THREE.Mesh(
+      new THREE.CircleGeometry(size * 0.33, 24),
+      new THREE.MeshStandardMaterial({
+        map: canvasTexture(96, 96, (c) => {
+          c.fillStyle = "#f2f2ee";
+          c.fillRect(0, 0, 96, 96);
+          c.fillStyle = "#101114";
+          c.textAlign = "center";
+          c.font = "700 66px Barlow, Arial, sans-serif";
+          c.fillText(num, 48, 71);
+        }),
+        roughness: 0.5,
+      }),
+    );
+    tag.position.set(size * 0.32, 0, size * 1.005);
+    headTurn.add(tag);
+    w.add(headTurn);
+    golfTurn.add(w);
+  };
+  wood("3", 0.066, -0.125, -0.085, 1.02, 0.25, 0xeeeeea);
+  wood("1", 0.082, -0.01, -0.125, 1.075, 0, 0xb22a22);
+  wood("5", 0.06, 0.115, -0.09, 1.0, -0.2, 0xeeeeea);
 
   // The Havanese, asleep on the rug
   const dogG = group("dog", [1.45, 0.012, 0.26]);
@@ -793,7 +846,10 @@ export function createOffice(canvas: HTMLCanvasElement, cb: OfficeCallbacks): Of
   fill.position.set(0.3, 2.3, 1.1);
   const screenGlow = new THREE.PointLight(0xcfe8ff, 0.7, 2.2, 1.6);
   screenGlow.position.set(0.2, 1.15, -0.5);
-  scene.add(fill, screenGlow);
+  // A soft key light so the golf set reads in every light setting.
+  const golfKey = new THREE.PointLight(0xfff1dc, 1.1, 1.9, 1.5);
+  golfKey.position.set(-1.25, 1.75, -0.35);
+  scene.add(fill, screenGlow, golfKey);
 
   let mode = startMode();
   const applyWindow = () => {
