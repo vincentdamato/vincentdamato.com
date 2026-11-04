@@ -208,7 +208,7 @@ const FOCUS: Record<Exclude<ItemId, "lamp">, { target: Pos; dist: number; lift?:
   about: { target: [0.95, 0.84, -0.4], dist: 0.95, lift: 0.3 },
   contact: { target: [1.56, 0.86, -0.82], dist: 1.0, lift: 0.3 },
   ratings: { target: [2.53, 1.36, -1.34], dist: 1.3 },
-  golf: { target: [-1.68, 0.92, -1.02], dist: 2.0, lift: 0.25 },
+  golf: { target: [-1.68, 0.76, -1.02], dist: 2.45, lift: 0.25 },
   espresso: { target: [1.6, 0.84, -0.36], dist: 0.8, lift: 0.3 },
   records: { target: [2.95, 0.74, -1.38], dist: 1.25, lift: 0.2 },
   plane: { target: [0.15, 2.16, -1.46], dist: 1.35, lift: -0.25 },
@@ -573,23 +573,27 @@ export function createOffice(canvas: HTMLCanvasElement, cb: OfficeCallbacks): Of
   const golfTurn = new THREE.Group();
   golfTurn.rotation.y = 0.32;
   golfG.add(golfTurn);
-  const bagBlack = mat(0x0d0e10, 0.4);
-  const bagMatte = mat(0x17181b, 0.75);
-  const bagWhite = mat(0xeeeeea, 0.45);
-  bagMatte.side = THREE.DoubleSide;
-  const lathe = (pts: [number, number][], m: THREE.Material) =>
-    mesh(new THREE.LatheGeometry(pts.map(([r, y]) => new THREE.Vector2(r, y)), 48), m);
-  golfTurn.add(lathe([[0, 0], [0.15, 0], [0.168, 0.018], [0.172, 0.13]], bagMatte));
-  golfTurn.add(lathe([[0.172, 0.13], [0.178, 0.45], [0.19, 0.76], [0.2, 0.86]], bagBlack));
-  golfTurn.add(lathe([[0.2, 0.86], [0.212, 0.9], [0.212, 0.965], [0.2, 0.98], [0.17, 0.975], [0, 0.94]], bagMatte));
-  const trim = (y: number, r: number, m: THREE.Material = bagWhite, t = 0.0055) => {
-    const ring = mesh(new THREE.TorusGeometry(r, t, 10, 56), m, [0, y, 0]);
-    ring.rotation.x = Math.PI / 2;
-    golfTurn.add(ring);
-  };
-  trim(0.131, 0.174);
-  trim(0.862, 0.202);
-  trim(0.978, 0.204);
+  const bagBlack = mat(0x0c0d0f, 0.52);
+  const bagWhite = mat(0xf0f0ec, 0.45);
+  bagBlack.side = THREE.DoubleSide;
+  // One smooth outline from base to cuff, so the bag reads as a single molded form.
+  const bagProfile = new THREE.SplineCurve(
+    ([
+      [0.0, 0.0],
+      [0.14, 0.0],
+      [0.165, 0.03],
+      [0.172, 0.14],
+      [0.178, 0.42],
+      [0.19, 0.72],
+      [0.203, 0.9],
+      [0.207, 0.955],
+      [0.198, 0.975],
+    ] as [number, number][]).map(([r, y]) => new THREE.Vector2(r, y)),
+  ).getPoints(70);
+  golfTurn.add(mesh(new THREE.LatheGeometry(bagProfile, 72), bagBlack));
+  const cuff = mesh(new THREE.TorusGeometry(0.2, 0.0065, 12, 72), bagWhite, [0, 0.974, 0]);
+  cuff.rotation.x = Math.PI / 2;
+  golfTurn.add(cuff);
 
   // Club dividers across the top
   const well = new THREE.Mesh(new THREE.CircleGeometry(0.2, 40), mat(0x08090a, 0.9));
@@ -601,39 +605,32 @@ export function createOffice(canvas: HTMLCanvasElement, cb: OfficeCallbacks): Of
   golfTurn.add(box(0.01, 0.018, 0.34, divider, [0.05, 0.975, 0]));
   golfTurn.add(box(0.01, 0.018, 0.34, divider, [-0.07, 0.975, 0]));
 
-  // Pockets, zips and the printed name
-  const panel = mesh(new RoundedBoxGeometry(0.25, 0.5, 0.075, 5, 0.03), bagBlack, [0, 0.46, 0.165]);
-  golfTurn.add(panel);
-  golfTurn.add(box(0.008, 0.46, 0.006, bagWhite, [-0.105, 0.46, 0.203]));
+  // Long ball pocket, side pocket and the printed name
+  const frontPocket = mesh(new THREE.CapsuleGeometry(0.105, 0.36, 16, 48), bagBlack, [0, 0.47, 0.142]);
+  frontPocket.scale.z = 0.5;
+  golfTurn.add(frontPocket);
+  const sidePocket = mesh(new THREE.CapsuleGeometry(0.07, 0.26, 12, 36), bagBlack, [0.158, 0.42, 0]);
+  sidePocket.scale.x = 0.42;
+  golfTurn.add(sidePocket);
   const namePrint = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.17, 0.42),
+    new THREE.PlaneGeometry(0.115, 0.42),
     new THREE.MeshStandardMaterial({
       transparent: true,
-      roughness: 0.5,
-      map: canvasTexture(256, 640, (c) => {
-        c.clearRect(0, 0, 256, 640);
-        c.translate(128, 320);
+      roughness: 0.55,
+      map: canvasTexture(320, 1168, (c) => {
+        c.clearRect(0, 0, 320, 1168);
+        c.translate(160, 584);
         c.rotate(-Math.PI / 2);
-        c.fillStyle = "#f4f4f0";
+        c.fillStyle = "#f6f6f2";
         c.textAlign = "center";
-        c.font = 'italic 700 118px Georgia, "Times New Roman", serif';
-        c.fillText("Titleist", 0, 38);
+        c.font = 'italic 700 290px Georgia, "Times New Roman", serif';
+        c.fillText("Titleist", 0, 92);
       }),
     }),
   );
-  namePrint.position.set(0.012, 0.46, 0.2035);
+  namePrint.position.set(0, 0.47, 0.1962);
   namePrint.castShadow = false;
   golfTurn.add(namePrint);
-  const collarPocket = mesh(new RoundedBoxGeometry(0.26, 0.11, 0.06, 4, 0.025), bagMatte, [0, 0.78, 0.178]);
-  collarPocket.rotation.x = -0.05;
-  golfTurn.add(collarPocket);
-  golfTurn.add(box(0.2, 0.006, 0.006, bagWhite, [0, 0.8, 0.21]));
-  const sidePocket = mesh(new RoundedBoxGeometry(0.075, 0.42, 0.17, 4, 0.03), bagBlack, [0.19, 0.42, 0]);
-  golfTurn.add(sidePocket);
-  golfTurn.add(box(0.006, 0.36, 0.006, bagWhite, [0.229, 0.42, 0.06]));
-  const carry = mesh(new THREE.TorusGeometry(0.06, 0.012, 10, 24, Math.PI), bagMatte, [-0.21, 0.9, 0]);
-  carry.rotation.set(0, Math.PI / 2, Math.PI / 2);
-  golfTurn.add(carry);
 
   // Irons, stored head-up the way they sit in a bag
   // Chrome reads its own reflections so the set still shines in the night scene.
