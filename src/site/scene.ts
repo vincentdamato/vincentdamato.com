@@ -418,7 +418,7 @@ export function createOffice(canvas: HTMLCanvasElement, cb: OfficeCallbacks): Of
     c.fillStyle = "#1b1408";
     c.font = "700 54px Georgia, serif";
     c.textAlign = "center";
-    c.fillText("V. D'AMATO", 256, 74);
+    c.fillText("V. DAMATO", 256, 74);
   });
   const plate = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.09, 0.02), new THREE.MeshStandardMaterial({ map: plateTex, roughness: 0.32, metalness: 0.6 }));
   plate.position.set(0, 0.055, 0);

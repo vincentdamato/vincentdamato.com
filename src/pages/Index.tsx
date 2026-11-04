@@ -5,7 +5,7 @@ const Site = lazy(() => import("@/site/Site"));
 
 const Index = () => {
   useEffect(() => {
-    document.title = "Vincent D'Amato | Finance Automation";
+    document.title = "Vincent Damato | Finance Automation";
   }, []);
 
   return (

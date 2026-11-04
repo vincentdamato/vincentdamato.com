@@ -67,6 +67,33 @@ export const PROJECTS = [
   },
 ];
 
+// Every place shown in the Places panel. Pins live in worldmap.ts.
+export const PLACE_GROUPS = [
+  {
+    region: "United States",
+    places: [
+      "Milwaukee (home)",
+      "New York City",
+      "Boston",
+      "Salem",
+      "Maine",
+      "Miami",
+      "Fort Lauderdale",
+      "Fort Myers",
+      "Nashville",
+      "Iowa City",
+      "Las Vegas",
+      "Scottsdale",
+      "Sedona",
+      "Aspen",
+      "Breckenridge",
+      "Vail",
+    ],
+  },
+  { region: "Caribbean", places: ["Tortola (BVI)", "St. Kitts and Nevis"] },
+  { region: "Europe", places: ["Zurich", "Jungfrau", "Copenhagen", "Munich", "Innsbruck", "Ljubljana", "Piran"] },
+];
+
 // Vincent's Bond Wizard Ratings Desk format. Edit freely.
 export const RATINGS = [
   { name: "Espresso", rating: "AAA", outlook: "Stable", why: "No missed payments on record." },
@@ -105,8 +132,7 @@ export const NOTES: Record<"golf" | "espresso" | "records" | "plane" | "map" | "
   map: {
     title: "Places",
     body: [
-      "Zurich is my favorite place I've traveled. I also love Scottsdale and Colorado.",
-      "Most recent: Oktoberfest in Munich, then Innsbruck, Ljubljana and the coast at Piran. Next on the list: the Michigan sand dunes, for UTV riding and golf.",
+      "Zurich is my favorite place I've traveled, and I've skied the Jungfrau.",
     ],
   },
   dog: {

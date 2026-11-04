@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BANK, BOOKS, reconcile, type Status } from "./recon";
-import { EMAIL, GITHUB, ITEMS, LINKEDIN, NOTES, OFFERS, PROJECTS, RATINGS, type ItemId } from "./content";
+import { EMAIL, GITHUB, ITEMS, LINKEDIN, NOTES, OFFERS, PLACE_GROUPS, PROJECTS, RATINGS, type ItemId } from "./content";
 import { createOffice, MODE_LABEL, type Office } from "./scene";
 import { drawWorldMap, whenMapFontsReady } from "./worldmap";
 import "@fontsource/barlow/400.css";
@@ -119,7 +119,7 @@ function TravelMap() {
       width={1536}
       height={952}
       role="img"
-      aria-label="World map marking Milwaukee, Colorado, Scottsdale, Zurich, Munich, Innsbruck, Ljubljana and Piran, with the Michigan dunes marked as next."
+      aria-label={`World map with pins on ${PLACE_GROUPS.flatMap((g) => g.places).join(", ")}.`}
     />
   );
 }
@@ -229,6 +229,13 @@ function PanelBody({ id }: { id: PanelId }) {
           {note.body.map((p) => (
             <p key={p}>{p}</p>
           ))}
+          {id === "map" &&
+            PLACE_GROUPS.map((g) => (
+              <section key={g.region} className="place-group">
+                <h3>{g.region}</h3>
+                <p>{g.places.join(", ")}</p>
+              </section>
+            ))}
         </>
       );
     }
@@ -312,7 +319,8 @@ export default function Site() {
       <canvas ref={canvasRef} className="room" aria-hidden="true" />
 
       <header className="intro" hidden={!!open}>
-        <h1>Vincent D'Amato</h1>
+        <h1>Vincent Damato</h1>
+        <p className="tag">Finance automation</p>
         {!noWebgl && (
           <>
             <p className="hint hint-mouse">Click around and explore my office.</p>

@@ -4,8 +4,8 @@ declare module "world-atlas/countries-110m.json" {
   export default value;
 }
 
-declare module "*/alps.json" {
-  import type { FeatureCollection } from "geojson";
-  const value: FeatureCollection;
+declare module "*/regions.json" {
+  import type { Feature } from "geojson";
+  const value: { europe: Feature[]; usa: Feature[] };
   export default value;
 }
