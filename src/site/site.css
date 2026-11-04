@@ -314,6 +314,14 @@ body {
   margin-top: 12px;
 }
 
+.travel-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 14px;
+  border: 1px solid var(--rule);
+}
+
 .demo {
   margin-top: 12px;
 }

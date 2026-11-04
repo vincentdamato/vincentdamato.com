@@ -82,7 +82,10 @@ export const RATINGS = [
 export const NOTES: Record<"golf" | "espresso" | "records" | "plane" | "map" | "cards" | "dog", { title: string; body: string[] }> = {
   golf: {
     title: "Golf",
-    body: ["Golf is how I spend Monday evenings in season. It's also why I co-founded Golf One Software."],
+    body: [
+      "Golf is how I spend Monday evenings in season. It's also why I co-founded Golf One Software.",
+      "In the bag: Titleist T300 irons.",
+    ],
   },
   espresso: {
     title: "Espresso",
@@ -103,7 +106,7 @@ export const NOTES: Record<"golf" | "espresso" | "records" | "plane" | "map" | "
     title: "Places",
     body: [
       "Zurich is my favorite place I've traveled. I also love Scottsdale and Colorado.",
-      "Next on the list: the Michigan sand dunes, for UTV riding and golf.",
+      "Most recent: Oktoberfest in Munich, then Innsbruck, Ljubljana and the coast at Piran. Next on the list: the Michigan sand dunes, for UTV riding and golf.",
     ],
   },
   dog: {

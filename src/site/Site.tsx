@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BANK, BOOKS, reconcile, type Status } from "./recon";
 import { EMAIL, GITHUB, ITEMS, LINKEDIN, NOTES, OFFERS, PROJECTS, RATINGS, type ItemId } from "./content";
 import { createOffice, MODE_LABEL, type Office } from "./scene";
+import { drawWorldMap, whenMapFontsReady } from "./worldmap";
 import "@fontsource/barlow/400.css";
 import "@fontsource/barlow/600.css";
 import "@fontsource/bodoni-moda/500.css";
@@ -98,6 +99,28 @@ function ReconDemo() {
       </div>
       <p className="note">Made-up data for a made-up company.</p>
     </div>
+  );
+}
+
+function TravelMap() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const ctx = ref.current?.getContext("2d");
+    if (!ctx) return;
+    drawWorldMap(ctx);
+    whenMapFontsReady()
+      .then(() => drawWorldMap(ctx))
+      .catch(() => undefined);
+  }, []);
+  return (
+    <canvas
+      ref={ref}
+      className="travel-map"
+      width={1536}
+      height={952}
+      role="img"
+      aria-label="World map marking Milwaukee, Colorado, Scottsdale, Zurich, Munich, Innsbruck, Ljubljana and Piran, with the Michigan dunes marked as next."
+    />
   );
 }
 
@@ -202,6 +225,7 @@ function PanelBody({ id }: { id: PanelId }) {
       return (
         <>
           <h2 id="panel-title">{note.title}</h2>
+          {id === "map" && <TravelMap />}
           {note.body.map((p) => (
             <p key={p}>{p}</p>
           ))}
@@ -289,11 +313,10 @@ export default function Site() {
 
       <header className="intro" hidden={!!open}>
         <h1>Vincent D'Amato</h1>
-        <p>I automate month-end and reconciliation work for small finance teams.</p>
         {!noWebgl && (
           <>
-            <p className="hint hint-mouse">Click around my office, or start with the left monitor.</p>
-            <p className="hint hint-touch">Drag to look around, and tap anything in the room.</p>
+            <p className="hint hint-mouse">Click around and explore my office.</p>
+            <p className="hint hint-touch">Drag around and explore my office.</p>
           </>
         )}
       </header>
