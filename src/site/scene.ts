@@ -212,7 +212,7 @@ const FOCUS: Record<Exclude<ItemId, "lamp">, { target: Pos; dist: number; lift?:
   espresso: { target: [1.6, 0.84, -0.36], dist: 0.8, lift: 0.3 },
   records: { target: [2.95, 0.74, -1.38], dist: 1.25, lift: 0.2 },
   plane: { target: [0.15, 2.16, -1.46], dist: 1.35, lift: -0.25 },
-  map: { target: [1.63, 1.72, -1.57], dist: 1.85 },
+  map: { target: [1.63, 1.91, -1.57], dist: 1.85 },
   cards: { target: [-0.62, 0.8, -0.42], dist: 0.85, lift: 0.4 },
   dog: { target: [1.45, 0.14, 0.26], dist: 1.25, lift: 0.7 },
 };
@@ -488,7 +488,7 @@ export function createOffice(canvas: HTMLCanvasElement, cb: OfficeCallbacks): Of
   scene.add(box(0.1, 0.18, 0.1, mat(COLORS.cream, 0.55), [-0.67, 2.03, -1.46]));
 
   // Framed travel map
-  const mapG = group("map", [1.63, 1.72, -1.57]);
+  const mapG = group("map", [1.63, 1.91, -1.57]);
   mapG.add(box(1.08, 0.72, 0.03, mat(COLORS.walnutDark, 0.5)));
   const mapTex = canvasTexture(2048, 1270, drawWorldMap);
   whenMapFontsReady()
