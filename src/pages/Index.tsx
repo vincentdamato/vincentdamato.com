@@ -1,26 +1,17 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
+
+// Three.js is large, so the office loads separately from the rest of the app.
+const Site = lazy(() => import("@/site/Site"));
 
 const Index = () => {
   useEffect(() => {
-    document.title = "Vincent D'Amato";
+    document.title = "Vincent Damato | Finance Automation";
   }, []);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeItems: "center",
-        padding: "24px",
-        textAlign: "center",
-        fontFamily: "system-ui, sans-serif",
-      }}
-    >
-      <div>
-        <h1 style={{ fontSize: "24px", fontWeight: 600 }}>Vincent D'Amato</h1>
-        <p style={{ marginTop: "8px" }}>This site is under maintenance.</p>
-      </div>
-    </main>
+    <Suspense fallback={<div style={{ position: "fixed", inset: 0, background: "#07130f" }} />}>
+      <Site />
+    </Suspense>
   );
 };
 
